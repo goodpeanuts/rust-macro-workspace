@@ -1,0 +1,8 @@
+[workspace]
+members = [ "knowledge_ai","macroe", "playground"]
+resolver = "2"
+
+[workspace.dependencies]
+syn = { version = "2", features = ["full", "extra-traits"] }
+quote = { version = "1.0" }
+proc-macro2 = "1.0.43"

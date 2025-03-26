@@ -1,0 +1,13 @@
+[package]
+name = "macroe"
+version = "0.1.0"
+edition = "2021"
+description = "A macro library for Rust edit"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+syn ={ workspace = true}
+quote = { workspace = true}
+proc-macro2 = { workspace = true}
