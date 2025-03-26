@@ -1,3 +1,8 @@
+use macroe::ipc;
+
 fn main() {
-    println!("Hello, world!");
+    let container = knowledge_ai::Foo::new();
+
+    #[ipc]
+    use knowledge_ai::ffi::export::{ipc::setup_ipc, ID};
 }
