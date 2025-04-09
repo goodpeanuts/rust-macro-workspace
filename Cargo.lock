@@ -3,10 +3,6 @@
 version = 3
 
 [[package]]
-name = "knowledge_ai"
-version = "0.1.0"
-
-[[package]]
 name = "macroe"
 version = "0.1.0"
 dependencies = [
@@ -19,8 +15,8 @@ dependencies = [
 name = "playground"
 version = "0.1.0"
 dependencies = [
- "knowledge_ai",
  "macroe",
+ "rt",
 ]
 
 [[package]]
@@ -40,6 +36,10 @@ checksum = "1885c039570dc00dcb4ff087a89e185fd56bae234ddc7f056a945bf36467248d"
 dependencies = [
  "proc-macro2",
 ]
+
+[[package]]
+name = "rt"
+version = "0.1.0"
 
 [[package]]
 name = "syn"

@@ -1,5 +1,5 @@
 [workspace]
-members = [ "knowledge_ai","macroe", "playground"]
+members = [ "rt","macroe", "playground"]
 resolver = "2"
 
 [workspace.dependencies]
