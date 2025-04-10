@@ -4,6 +4,7 @@ use once_cell::sync::Lazy;
 
 #[derive(Debug)]
 pub struct FuncMeta {
+    pub namespace: &'static str,
     pub func: fn(),
     pub meta: &'static Meta,
 }

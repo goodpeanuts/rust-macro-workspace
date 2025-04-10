@@ -1,6 +1,7 @@
 use proc_macro::TokenStream;
 
 mod callback;
+mod class;
 mod r#enum;
 mod func;
 mod model;
@@ -23,4 +24,9 @@ pub fn callback(_attr: TokenStream, item: TokenStream) -> TokenStream {
 #[proc_macro_attribute]
 pub fn func(_attr: TokenStream, item: TokenStream) -> TokenStream {
     func::func_wrapper(item)
+}
+
+#[proc_macro_attribute]
+pub fn class(_attr: TokenStream, item: TokenStream) -> TokenStream {
+    class::class_wrapper(item)
 }

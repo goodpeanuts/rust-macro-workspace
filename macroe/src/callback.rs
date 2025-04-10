@@ -9,13 +9,13 @@ pub fn callback_wrapper(item: TokenStream) -> TokenStream {
 
     let expanded = quote! {
         #input
-        impl FfiDef for dyn #trait_name {
+        impl ::rt::FfiDef for dyn #trait_name {
             const META: &'static ::rt::Meta = &::rt::Meta {
                 deps: &[],
-                def: ::rt::Definition {
+                def: &[&::rt::Definition {
                     name: #trait_name_str,
                     ty: concat!("dyn ", #trait_name_str),
-                },
+                }],
             };
         }
     };

@@ -9,13 +9,13 @@ pub fn model_wrapper(item: TokenStream) -> TokenStream {
 
     let expanded = quote! {
         #input
-        impl FfiDef for #trait_name {
+        impl ::rt::FfiDef for #trait_name {
             const META: &'static ::rt::Meta = &::rt::Meta {
                 deps: &[],
-                def: ::rt::Definition {
+                def: &[&::rt::Definition {
                     name: #trait_name_str,
                     ty: "model",
-                },
+                }],
             };
         }
     };

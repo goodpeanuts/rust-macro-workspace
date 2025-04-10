@@ -7,4 +7,9 @@ description = "A playground for macro use to test macro in macroe"
 [dependencies]
 macroe ={ path = "../macroe"}
 rt = { path = "../rt"}
-linkme = "=0.3.32"
+linkme = { version = "=0.3.32", features = ["used_linker"] }
+uuid = "1.16.0"
+ctor = "0.4.1"
+
+[profile.dev]
+codegen-units = 1

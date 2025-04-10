@@ -1,5 +1,6 @@
-use rt::get_func_meta;
-pub use rt::meta::FfiDef;
+#![feature(used_with_arg)]
+use playground::mod1::AClass;
+use rt::{get_func_meta, FfiDef};
 
 #[macroe::callback]
 pub trait ACallback {
@@ -24,9 +25,11 @@ fn test_fn() {
 }
 
 fn main() {
-    println!("{:?}", <dyn ACallback>::META);
-    println!("{:?}", <AEnum>::META);
-    println!("{:?}", <AModel>::META);
-    println!("{:?}", get_func_meta(test_fn as usize));
+    let a = AClass::new(1, 2);
+    let _ = a.mul();
+    // println!("{:#?}", <dyn ACallback as FfiDef>::META);
+    // println!("{:#?}", <AEnum as FfiDef>::META);
+    // println!("{:#?}", <AModel as FfiDef>::META);
+    // println!("{:#?}", get_func_meta(test_fn as usize));
+    println!("{:#?}", AClass::meta());
 }
-
