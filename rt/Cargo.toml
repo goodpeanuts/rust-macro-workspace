@@ -5,3 +5,7 @@ edition = "2021"
 description = "mock dependency for playground"
 
 [dependencies]
+once_cell = "1.17.0"
+dashmap = "*"
+linkme = "=0.3.32"
+ctor = "*"

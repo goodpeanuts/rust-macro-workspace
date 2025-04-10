@@ -7,3 +7,4 @@ description = "A playground for macro use to test macro in macroe"
 [dependencies]
 macroe ={ path = "../macroe"}
 rt = { path = "../rt"}
+linkme = "=0.3.32"
