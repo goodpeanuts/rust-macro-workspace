@@ -6,3 +6,6 @@ resolver = "2"
 syn = { version = "2", features = ["full", "extra-traits"] }
 quote = { version = "1.0" }
 proc-macro2 = "1.0.43"
+
+[profile.dev]
+codegen-units = 1

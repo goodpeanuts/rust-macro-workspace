@@ -1,3 +1,4 @@
+#![feature(used_with_arg)]
 // use mod1::AClass;
 
 pub mod mod1;

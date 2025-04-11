@@ -19,7 +19,7 @@ pub fn class_wrapper(item: TokenStream) -> TokenStream {
 fn handle_struct(item_struct: ItemStruct) -> TokenStream {
     let struct_name = &item_struct.ident;
     let struct_name_str = struct_name.to_string();
-    let static_var_name = format_ident!("__CLASS_SELF_META_{}", struct_name_str);
+    let ctor_fn_name = format_ident!("__ctor_{}", struct_name_str);
 
     let expanded = quote! {
         #item_struct
@@ -44,18 +44,32 @@ fn handle_struct(item_struct: ItemStruct) -> TokenStream {
             }
         }
 
-        static #static_var_name: ::rt::ClassMeta = ::rt::ClassMeta {
-            namespace: module_path!(),
-            name: #struct_name_str,
-            meta: &::rt::Meta {
-                deps: &[],
-                def: &[&::rt::Definition {
-                    name: #struct_name_str,
-                    ty: concat!("[class] ", module_path!()),
-                }],
-            },
+        // static #static_var_name: ::rt::ClassMeta = ::rt::ClassMeta {
+        //     namespace: module_path!(),
+        //     name: #struct_name_str,
+        //     meta: &::rt::Meta {
+        //         deps: &[],
+        //         def: &[&::rt::Definition {
+        //             name: #struct_name_str,
+        //             ty: concat!("[class] ", module_path!()),
+        //         }],
+        //     },
+        // };
 
-        };
+        // #[::ctor::ctor]
+        // fn #ctor_fn_name() {
+        //     ::rt::submit_class_meta(
+        //         module_path!(),
+        //         #struct_name_str,
+        //         &::rt::Meta {
+        //             deps: &[],
+        //             def: &[&::rt::Definition {
+        //                 name: #struct_name_str,
+        //                 ty: concat!("[class] ", module_path!()),
+        //             }],
+        //         },
+        //     );
+        // }
     };
 
     TokenStream::from(expanded)
