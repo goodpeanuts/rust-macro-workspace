@@ -1,0 +1,10 @@
+[package]
+name = "ffi"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+
+[build-dependencies]
+rt = { path = "../rt"}
+playground = { path = "../playground" }

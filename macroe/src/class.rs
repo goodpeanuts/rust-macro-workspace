@@ -1,6 +1,5 @@
 use proc_macro::TokenStream;
 use quote::{format_ident, quote};
-use rand::prelude::*;
 use syn::{parse_macro_input, spanned::Spanned, Item, ItemStruct};
 
 pub fn class_wrapper(item: TokenStream) -> TokenStream {
@@ -45,7 +44,6 @@ fn handle_struct(item_struct: ItemStruct) -> TokenStream {
             }
         }
 
-        #[::linkme::distributed_slice(::rt::__CLASS_META)]
         static #static_var_name: ::rt::ClassMeta = ::rt::ClassMeta {
             namespace: module_path!(),
             name: #struct_name_str,
@@ -89,9 +87,7 @@ fn handle_impl(item_impl: syn::ItemImpl) -> TokenStream {
     };
     let expanded = quote! {
         #item_impl
-        
-        #[no_mangle]
-        #[::linkme::distributed_slice(::rt::__CLASS_META)]
+
         static #static_var_name: ::rt::ClassMeta = ::rt::ClassMeta {
             namespace: module_path!(),
             name: #struct_name,
