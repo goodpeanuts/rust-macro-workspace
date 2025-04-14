@@ -30,11 +30,12 @@ pub enum AEnum {
     B,
 }
 
-#[macroe::model]
+#[macroe::model("AEnum")]
 pub struct AModel {
     pub a: i32,
     pub b: i32,
 }
+
 
 #[macroe::func]
 pub fn test_fn() {
