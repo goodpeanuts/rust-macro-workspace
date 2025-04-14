@@ -27,6 +27,6 @@ pub fn func(_attr: TokenStream, item: TokenStream) -> TokenStream {
 }
 
 #[proc_macro_attribute]
-pub fn class(_attr: TokenStream, item: TokenStream) -> TokenStream {
-    class::class_wrapper(item)
+pub fn class(attr: TokenStream, item: TokenStream) -> TokenStream {
+    class::class_wrapper(attr, item)
 }

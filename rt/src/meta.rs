@@ -4,10 +4,12 @@ pub struct Definition {
     pub ty: &'static str,
 }
 
+pub type MetaFn = fn() -> Vec<&'static Meta>;
+
 #[derive(Debug)]
 pub struct Meta {
     // 记录需要依赖的内容
-    pub deps: &'static [&'static Meta],
+    pub deps: &'static [MetaFn],
     // 当前的导出信息
     pub def: &'static [&'static Definition],
 }

@@ -1,4 +1,5 @@
 #![feature(used_with_arg)]
+#![feature(const_mut_refs)]
 // use mod1::AClass;
 
 pub mod mod1;
