@@ -57,10 +57,11 @@ pub fn get_class_meta(namespace: &'static str, name: &'static str) -> Option<&'s
         let leaked_deps: &'static [&'static crate::Meta] = Box::leak(Box::new(deps));
         let leaked_defs: &'static [&'static crate::Definition] = Box::leak(Box::new(class_meta.def));
 
-        Some(Box::leak(Box::new(crate::Meta {
-            deps: leaked_deps,
-            def: leaked_defs,
-        })))
+        // Some(Box::leak(Box::new(crate::Meta {
+        //     deps: leaked_deps,
+        //     def: leaked_defs,
+        // })))
+        todo!()
     } else {
         None
     }

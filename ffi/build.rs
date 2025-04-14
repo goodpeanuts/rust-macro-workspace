@@ -15,9 +15,15 @@ fn main() {
     println!("cargo:rerun-if-changed=build.rs");
 
     let metas: Vec<String> = collect_metas!(
-        // get_func_meta(playground::test_fn as usize),
-        // get_func_meta(playground::mod1::mod1_fn as usize),
-        playground::AModel::meta()
+        // enum
+        playground::AEnum::meta(),
+        // model
+        playground::AModel::meta(),
+        // callback
+        <dyn playground::ACallback>::meta(),
+        // fn
+        get_func_meta(playground::test_fn as usize),
+        get_func_meta(playground::mod1::mod1_fn as usize)
     );
 
     let out_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap();

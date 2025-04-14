@@ -2,12 +2,19 @@ use proc_macro::TokenStream;
 use quote::{format_ident, quote};
 use syn::{parse_macro_input, ItemFn};
 
-pub fn func_wrapper(item: TokenStream) -> TokenStream {
+pub fn func_wrapper(attr: TokenStream, item: TokenStream) -> TokenStream {
+    let deps_attr = parse_macro_input!(attr as crate::MockDepAttr);
     let input = parse_macro_input!(item as ItemFn);
     let func_name = &input.sig.ident;
     let func_name_str = func_name.to_string();
     let ctor_fn_name = format_ident!("__ctor_{}", func_name_str);
     let force_link = format_ident!("__force_link_{}", func_name_str);
+
+    // TODO 区分callback
+    let deps = deps_attr.deps.iter().map(|lit| {
+        let s = format_ident!("{}", lit.value());
+        quote! { #s::meta }
+    });
 
     let expanded = quote! {
             #input
@@ -16,7 +23,7 @@ pub fn func_wrapper(item: TokenStream) -> TokenStream {
             fn #ctor_fn_name() {
                 let func_ptr = #func_name as usize;
                 ::rt::FUNC_META_MAP.insert(func_ptr, &::rt::Meta {
-                    deps: &[],
+                    deps: &[#(#deps),*],
                     def: &[&::rt::Definition {
                         name: #func_name_str,
                         ty: concat!("[fn] ", module_path!()),
