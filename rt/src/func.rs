@@ -6,6 +6,7 @@ pub static FUNC_META_MAP: Lazy<DashMap<usize, &'static Meta>> = Lazy::new(DashMa
 
 pub fn get_func_meta_map() -> String {
     let mut info = String::new();
+    info.push_str("\n=========== func ==============\n");
     for entry in FUNC_META_MAP.iter() {
         info.push_str(&format!(
             "key: {:#x}, value: {:#?}",
@@ -13,12 +14,14 @@ pub fn get_func_meta_map() -> String {
             entry.value()
         ));
     }
+    info.push_str("\n=========== func ==============\n");
     info
 }
 
-pub fn get_func_meta(ptr: usize) -> &'static Meta {
-    FUNC_META_MAP
+pub fn get_func_meta(ptr: usize) -> Vec<&'static Meta> {
+    let meta = FUNC_META_MAP
         .get(&ptr)
         .map(|v| *v)
-        .unwrap_or_else(|| panic!("get func meta error, ptr: {:#x}", ptr))
+        .unwrap_or_else(|| panic!("get func meta error, ptr: {:#x}", ptr));
+    vec![meta]
 }

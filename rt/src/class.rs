@@ -1,4 +1,3 @@
-// use crate::Meta;
 use dashmap::DashMap;
 use once_cell::sync::Lazy;
 
@@ -14,17 +13,18 @@ pub struct ClassMeta {
 
 pub static CLASS_META_MAP: Lazy<DashMap<(&str, &str), &'static Meta>> = Lazy::new(DashMap::new);
 
-// #[ctor::ctor]
-pub fn init_class_meta_map() {
-    // for meta in __CLASS_META {
-    //     let crate_name = meta.namespace.split("::").next().unwrap_or(meta.namespace);
-    //     CLASS_META_MAP
-    //         .entry((crate_name, meta.name))
-    //         .and_modify(|existing_metas| {
-    //             existing_metas.push(meta.meta);
-    //         })
-    //         .or_insert_with(|| vec![meta.meta]);
-    // }
+pub fn get_impl_meta_map() -> String {
+    let mut info = String::new();
+    info.push_str("\n=========== impl ==============\n");
+    for entry in CLASS_META_MAP.iter() {
+        info.push_str(&format!(
+            "key: {:#?}, value: {:#?}",
+            entry.key(),
+            entry.value()
+        ));
+    }
+    info.push_str("\n=========== impl ==============\n");
+    info
 }
 
 pub fn submit_class_meta(namespace: &'static str, struct_name: &'static str, meta: &'static Meta) {
@@ -34,14 +34,14 @@ pub fn submit_class_meta(namespace: &'static str, struct_name: &'static str, met
         .or_insert_with(|| meta);
 }
 
-pub fn get_impl_meta(namespace: &'static str, name: &'static str) -> &'static crate::Meta {
+pub fn get_impl_meta(namespace: &'static str, name: &'static str) -> &'static Meta {
     let namespace = namespace.split("::").next().unwrap_or(namespace);
 
-    CLASS_META_MAP.get(&(namespace, name)).unwrap_or_else(|| {
+    let meta = CLASS_META_MAP.get(&(namespace, name)).unwrap_or_else(|| {
         panic!(
-            "ClassMeta not found for namespace: {}, name: {}",
-            namespace, name
+            "ClassMeta not found for entry [namespace: {}, name: {}]\n{}",
+            namespace, name, get_impl_meta_map()
         )
     });
-    todo!()
+    *meta
 }

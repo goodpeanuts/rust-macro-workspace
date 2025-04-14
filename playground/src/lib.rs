@@ -1,23 +1,23 @@
 #![feature(used_with_arg)]
 #![feature(const_mut_refs)]
-// use mod1::AClass;
+pub use mod1::AClass;
 
 pub mod mod1;
 
-// #[macroe::class]
-// impl AClass {
-//     pub fn new(a: i32, b: i32) -> Self {
-//         AClass { a, b }
-//     }
+#[macroe::class(id = 1)]
+impl AClass {
+    pub fn new(a: i32, b: i32) -> Self {
+        AClass { a, b }
+    }
 
-//     pub fn add(&self) -> i32 {
-//         self.a + self.b
-//     }
+    pub fn add(&self) -> i32 {
+        self.a + self.b
+    }
 
-//     pub fn sub(&self) -> i32 {
-//         self.a - self.b
-//     }
-// }
+    pub fn sub(&self) -> i32 {
+        self.a - self.b
+    }
+}
 
 #[macroe::callback]
 pub trait ACallback {
