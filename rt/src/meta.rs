@@ -1,24 +1,86 @@
-#[derive(Debug)]
-pub struct Definition {
-    pub name: &'static str,
-    pub ty: &'static str,
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
+pub enum Ty {
+    Enum,
+    Model,
+    Class,
+    Method,
+    Func,
+    Callback,
 }
 
-pub type MetaFn = fn() -> Vec<&'static Meta>;
+#[derive(Debug, PartialEq, Eq)]
+pub struct Definition {
+    pub name: &'static str,
+    pub namespace: &'static str,
+    pub ty: Ty,
+}
 
-#[derive(Debug)]
+pub type MetaFn = fn() -> &'static Meta;
+
+#[derive(Debug, PartialEq, Eq)]
 pub struct Meta {
     // 记录需要依赖的内容
-    pub deps: &'static [MetaFn],
+    pub dep: &'static [MetaFn],
     // 当前的导出信息
     pub def: &'static [&'static Definition],
+    pub ty: Ty,
+}
+
+impl Meta {
+    pub fn debug_without_dep(&self) -> String {
+        let def_str = self
+            .def
+            .iter()
+            .map(|d| {
+                format!(
+                    "        Definition {{\n            name: \"{}\",\n            namespace: \"{}\",\n            ty: {:?},\n        }}",
+                    d.name, d.namespace, d.ty
+                )
+            })
+            .collect::<Vec<_>>()
+            .join(",\n");
+
+        format!(
+            "Meta {{\n    ty: {:?},\n    def: [\n{}\n    ],\n}}",
+            self.ty, def_str
+        )
+    }
 }
 
 pub trait FfiDef {
     // const fn meta() -> &'static Meta
     const META: &'static Meta;
 
-    fn meta() -> Vec<&'static Meta> {
-        vec![Self::META]
+    fn meta() -> &'static Meta {
+        Self::META
+    }
+}
+
+impl Ord for Definition {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.ty
+            .cmp(&other.ty)
+            .then_with(|| self.name.cmp(other.name))
+            .then_with(|| self.namespace.cmp(other.namespace))
+    }
+}
+
+impl PartialOrd for Definition {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Meta {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.ty
+            .cmp(&other.ty)
+            .then_with(|| self.def.cmp(other.def))
+            .then_with(|| self.dep.cmp(other.dep))
+    }
+}
+impl PartialOrd for Meta {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
     }
 }

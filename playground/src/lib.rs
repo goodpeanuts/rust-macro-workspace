@@ -4,7 +4,7 @@ pub use mod1::AClass;
 
 pub mod mod1;
 
-#[macroe::class(id = 1)]
+#[macroe::class]
 impl AClass {
     pub fn new(a: i32, b: i32) -> Self {
         AClass { a, b }
@@ -35,7 +35,6 @@ pub struct AModel {
     pub a: i32,
     pub b: i32,
 }
-
 
 #[macroe::func]
 pub fn test_fn() {

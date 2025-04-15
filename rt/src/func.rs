@@ -23,10 +23,9 @@ pub fn get_func_meta_map() -> String {
     info
 }
 
-pub fn get_func_meta(ptr: usize) -> Vec<&'static Meta> {
-    let meta = FUNC_META_MAP
+pub fn get_func_meta(ptr: usize) -> &'static Meta {
+    FUNC_META_MAP
         .get(&ptr)
         .map(|v| *v)
-        .unwrap_or_else(|| panic!("get func meta error, ptr: {:#x}", ptr));
-    vec![meta]
+        .unwrap_or_else(|| panic!("get func meta error, ptr: {:#x}", ptr))
 }

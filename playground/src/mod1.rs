@@ -1,10 +1,10 @@
-#[macroe::class(impls = 1)]
+#[macroe::class]
 pub struct AClass {
     pub a: i32,
     pub b: i32,
 }
 
-#[macroe::class(id = 0)]
+#[macroe::class]
 impl AClass {
     pub fn mul(&self) -> i32 {
         self.a * self.b
@@ -15,4 +15,3 @@ impl AClass {
 pub fn mod1_fn() {
     println!("mod1 fn");
 }
-

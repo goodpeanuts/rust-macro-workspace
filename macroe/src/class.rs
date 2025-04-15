@@ -1,109 +1,107 @@
 use proc_macro::TokenStream;
 use quote::{format_ident, quote};
-use syn::{
-    parse::{Parse, ParseStream},
-    parse_macro_input,
-    spanned::Spanned,
-    Ident, Item, ItemStruct, LitInt, Token,
-};
+use syn::{parse_macro_input, spanned::Spanned, Item, ItemImpl, ItemStruct};
 
-struct ClassAttr {
-    key: Ident,
-    _eq_token: Token![=],
-    value: LitInt,
-}
+// struct ClassAttr {
+//     key: Ident,
+//     _eq_token: Token![=],
+//     value: LitInt,
+// }
 
-impl Parse for ClassAttr {
-    fn parse(input: ParseStream) -> syn::Result<Self> {
-        Ok(ClassAttr {
-            key: input.parse()?,
-            _eq_token: input.parse()?,
-            value: input.parse()?,
-        })
-    }
-}
+// impl Parse for ClassAttr {
+//     fn parse(input: ParseStream) -> syn::Result<Self> {
+//         Ok(ClassAttr {
+//             key: input.parse()?,
+//             _eq_token: input.parse()?,
+//             value: input.parse()?,
+//         })
+//     }
+// }
 
 pub fn class_wrapper(attr: TokenStream, item: TokenStream) -> TokenStream {
     let input = parse_macro_input!(item as Item);
-    let class_attr = parse_macro_input!(attr as ClassAttr);
 
     match input {
-        Item::Struct(item_struct) => {
-            if class_attr.key != "impls" {
-                return TokenStream::from(quote! {
-                    compile_error!("Expected `impls` attribute");
-                });
-            }
-            let impls_count = class_attr.value.base10_parse::<usize>().unwrap_or(0);
-            handle_struct(item_struct, impls_count)
-        }
-        Item::Impl(item_impl) => {
-            if class_attr.key != "id" {
-                return TokenStream::from(quote! {
-                    compile_error!("Expected `impl` attribute");
-                });
-            }
-            let impl_idx = class_attr.value.base10_parse::<usize>().unwrap_or(0);
-            handle_impl(item_impl, impl_idx)
-        }
-        _ => {
-            // 如果输入不是 `struct` 或 `impl`，返回一个编译错误
-            TokenStream::from(quote! {
-                compile_error!("Expected a struct or impl block");
-            })
-        }
+        Item::Struct(item_struct) => handle_struct(attr, item_struct),
+        Item::Impl(item_impl) => handle_impl(attr, item_impl),
+        _ => TokenStream::from(quote! {
+            compile_error!("Expected a struct or impl block");
+        }),
     }
 }
 
-fn handle_struct(item_struct: ItemStruct, impls_count: usize) -> TokenStream {
+fn handle_struct(attr: TokenStream, item_struct: ItemStruct) -> TokenStream {
     let struct_name = &item_struct.ident;
     let struct_name_str = struct_name.to_string();
-    let get_impl_code_fn = format_ident!("__{}_get_impl", struct_name_str);
+    let struct_name_lower = struct_name_str.to_lowercase();
 
-    let impl_code = (0..=impls_count).map(|i| {
-        let impl_name = format!("__{}_impl{}", struct_name_str, i);
-        quote! {
-            ::rt::get_impl_meta(module_path!(), #impl_name)
-        }
-    });
+    let uuid = uuid::Uuid::new_v4().to_u128_le();
+    let ctor_fn_name = format_ident!("__ctor_class_{}_{}", struct_name_lower, uuid);
+
+    let deps_attr = parse_macro_input!(attr as crate::MockDepAttr);
+
+    // TODO 区分callback: <dyn #s::meta as FfiDef>::meta()
+    let deps = deps_attr
+        .deps
+        .iter()
+        .map(|lit| {
+            let s = format_ident!("{}", lit.value());
+            quote! { <#s as ::rt::FfiDef>::meta }
+        })
+        .collect::<Vec<_>>();
 
     let expanded = quote! {
         #item_struct
-        
-        fn #get_impl_code_fn() -> Vec<&'static ::rt::Meta> {
-            vec![
-                #(
-                    #impl_code,
-                )*
-            ]
-        }
+
         impl ::rt::FfiDef for #struct_name {
             const META: &'static ::rt::Meta = &::rt::Meta {
-                deps: &[
-                    #get_impl_code_fn,
-                ],
-                def: &[
-                    &::rt::Definition {
-                        name: #struct_name_str,
-                        ty: concat!("[class] ", module_path!()),
-                    },
-                ]
-                
+                dep: &[#(#deps),*],
+                def: &[&::rt::Definition {
+                    name: #struct_name_str,
+                    namespace: module_path!(),
+                    ty: ::rt::Ty::Class,
+                }],
+                ty: ::rt::Ty::Class,
             };
-            fn meta() -> Vec<&'static ::rt::Meta> {
-                vec![Self::META]
+            fn meta() -> &'static ::rt::Meta {
+                ::rt::get_class_meta(module_path!(), #struct_name_str)
             }
         }
+
+        #[::ctor::ctor]
+        pub fn #ctor_fn_name() {
+            ::rt::submit_class_meta(
+                module_path!(),
+                #struct_name_str,
+                ::rt::ClassMeta {
+                    dep: vec![#(#deps),*],
+                    def: vec![&::rt::Definition {
+                        name: #struct_name_str,
+                        namespace: module_path!(),
+                        ty: ::rt::Ty::Class,
+                    }],
+                }
+            );
+        }
+
     };
 
     TokenStream::from(expanded)
 }
-fn handle_impl(item_impl: syn::ItemImpl, impl_idx: usize) -> TokenStream {
-    let struct_name = item_impl.get_name().expect("get impl class name error");
+fn handle_impl(attr: TokenStream, item_impl: ItemImpl) -> TokenStream {
+    let struct_name_str = item_impl.get_name().expect("get impl class name error");
+    let struct_name_lower = struct_name_str.to_lowercase();
     let mut methods = Vec::new();
     let uuid = uuid::Uuid::new_v4().to_u128_le();
-    let ctor_name = format_ident!("__IMPL_META_CTOR_{}_{}", struct_name, uuid);
-    let impl_name = format!("__{}_impl{}", struct_name, impl_idx);
+    let ctor_fn_name = format_ident!("__ctor_impl_{}_{}", struct_name_lower, uuid);
+
+    let deps_attr = parse_macro_input!(attr as crate::MockDepAttr);
+
+    // TODO 区分callback: <dyn #s::meta as FfiDef>::meta()
+    let deps = deps_attr.deps.iter().map(|lit| {
+        let s = format_ident!("{}", lit.value());
+        quote! { <#s as ::rt::FfiDef>::meta }
+    });
 
     for item in &item_impl.items {
         if let syn::ImplItem::Fn(method) = item {
@@ -113,7 +111,8 @@ fn handle_impl(item_impl: syn::ItemImpl, impl_idx: usize) -> TokenStream {
             methods.push(quote! {
                 &::rt::Definition {
                     name: #method_name_str,
-                    ty: concat!("[class_impl] ", module_path!()),
+                    namespace: module_path!(),
+                    ty: ::rt::Ty::Method,
                 }
             });
         }
@@ -121,18 +120,18 @@ fn handle_impl(item_impl: syn::ItemImpl, impl_idx: usize) -> TokenStream {
 
     // 将 methods 转换为 `def` 数组
     let def = quote! {
-        &[#(#methods),*]
+        vec![#(#methods),*]
     };
     let expanded = quote! {
         #item_impl
 
         #[::ctor::ctor]
-        pub fn #ctor_name() {
+        pub fn #ctor_fn_name() {
             ::rt::submit_class_meta(
                 module_path!(),
-                #impl_name,
-                &::rt::Meta {
-                    deps: &[],
+                #struct_name_str,
+                ::rt::ClassMeta {
+                    dep: vec![#(#deps),*],
                     def: #def,
                 }
             );
