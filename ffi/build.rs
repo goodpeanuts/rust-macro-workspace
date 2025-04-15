@@ -1,12 +1,12 @@
-use rt::{get_func_meta, FfiDef, get_func_meta_map};
+use rt::{get_func_meta, FfiDef, Meta};
 use std::fs::{self, OpenOptions};
 use std::io::Write;
 use std::path::Path;
 
 macro_rules! collect_metas {
-    ($($meta:expr),*) => {
+    ($($meta:expr),* $(,)?) => {
         vec![
-            $(format!("{:#?}", $meta)),*
+            $($meta),*
         ]
     };
 }
@@ -14,18 +14,38 @@ macro_rules! collect_metas {
 fn main() {
     println!("cargo:rerun-if-changed=build.rs");
 
-    let metas: Vec<String> = collect_metas!(
+    let metas: Vec<&'static Meta> = collect_metas!(
         // enum
-        playground::AEnum::meta(),
+        // playground::AEnum::meta(),
         // model
-        playground::AModel::meta(),
+        // playground::AModel::meta(),
         // callback
-        <dyn playground::ACallback>::meta(),
+        // <dyn playground::ACallback>::meta(),
         // fn
         get_func_meta(playground::test_fn as usize),
-        get_func_meta(playground::mod1::mod1_fn as usize)
-    );
+        // get_func_meta(playground::mod1::mod1_fn as usize),
+        // class
+        playground::AClass::meta()
+    )
+    .into_iter()
+    .flat_map(|meta| meta.iter().cloned().collect::<Vec<_>>())
+    .collect();
 
+    let mut defs = Vec::new();
+
+    for meta in metas {
+        if meta.deps.is_empty() {
+            defs.extend_from_slice(meta.def);
+        } else {
+            for dep in meta.deps {
+                let dep_meta = dep();
+                dep_meta.iter().for_each(|dep_meta| {
+                    defs.extend_from_slice(dep_meta.def);
+                });
+            }
+            defs.extend_from_slice(meta.def);
+        }
+    }
     let out_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap();
     let ffi_file_path = Path::new(&out_dir).join("src/spec");
 
@@ -40,10 +60,12 @@ fn main() {
         .open(&ffi_file_path)
         .expect("Failed to open spec file");
 
-    for meta in metas {
-        writeln!(file, "{}", meta).expect("Failed to write to spec file");
+    for def in defs {
+        writeln!(file, "{:#?}", def).expect("Failed to write to spec file");
     }
-    writeln!(file, "{}", "------ func -----------").expect("Failed to write to spec file");
-    writeln!(file, "{}", get_func_meta_map()).expect("Failed to write to spec file");
-    writeln!(file, "{}", "------ func -----------").expect("Failed to write to spec file");
+
+
+    // writeln!(file, "{}", rt::get_func_meta_map()).expect("Failed to write to spec file");
+
+    writeln!(file, "{}", rt::get_impl_meta_map()).expect("Failed to write to spec file");
 }

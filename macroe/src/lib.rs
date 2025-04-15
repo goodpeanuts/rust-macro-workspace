@@ -1,6 +1,6 @@
 use proc_macro::TokenStream;
 use syn::{
-    parse::{Parse, ParseStream, Parser},
+    parse::{Parse, ParseStream},
     punctuated::Punctuated,
     LitStr, Token,
 };
@@ -45,6 +45,6 @@ pub fn func(attr: TokenStream, item: TokenStream) -> TokenStream {
 }
 
 #[proc_macro_attribute]
-pub fn class(_attr: TokenStream, item: TokenStream) -> TokenStream {
-    class::class_wrapper(item)
+pub fn class(attr: TokenStream, item: TokenStream) -> TokenStream {
+    class::class_wrapper(attr, item)
 }
