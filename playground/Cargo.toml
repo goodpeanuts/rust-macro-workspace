@@ -8,7 +8,6 @@ description = "A playground for macro use to test macro in macroe"
 macroe = { path = "../macroe" }
 rt = { path = "../rt" }
 playground_dep = { path = "../playground_dep" }
-ctor = { workspace = true }
 
 [features]
 bindgen = ["macroe/bindgen"]

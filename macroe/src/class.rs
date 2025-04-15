@@ -55,39 +55,39 @@ fn handle_struct(attr: TokenStream, item_struct: ItemStruct) -> TokenStream {
 
 
 
-        impl ::rt::FfiDef for #struct_name {
-            const META: &'static ::rt::Meta = &::rt::Meta {
-                dep: &[#(#deps),*],
-                def: &[&::rt::Definition {
-                    name: #struct_name_str,
-                    namespace: module_path!(),
-                    ty: ::rt::Ty::Class,
-                }],
-                ty: ::rt::Ty::Class,
-            };
-            fn meta() -> &'static ::rt::Meta {
-                ::rt::get_class_meta(module_path!(), #struct_name_str)
-            }
-        }
-
-
-
-
-        #[::rt::deps::ctor::ctor]
-        pub fn #ctor_fn_name() {
-            ::rt::submit_class_meta(
-                module_path!(),
-                #struct_name_str,
-                ::rt::ClassMeta {
-                    dep: vec![#(#deps),*],
-                    def: vec![&::rt::Definition {
+        const _: () = {
+            impl ::rt::FfiDef for #struct_name {
+                const META: &'static ::rt::Meta = &::rt::Meta {
+                    dep: &[#(#deps),*],
+                    def: &[&::rt::Definition {
                         name: #struct_name_str,
                         namespace: module_path!(),
                         ty: ::rt::Ty::Class,
                     }],
+                    ty: ::rt::Ty::Class,
+                };
+                fn meta() -> &'static ::rt::Meta {
+                    ::rt::get_class_meta(module_path!(), #struct_name_str)
                 }
-            );
-        }
+            }
+
+            // use ::rt::deps::ctor::ctor;
+            #[::rt::deps::ctor::ctor]
+            fn #ctor_fn_name() {
+                ::rt::submit_class_meta(
+                    module_path!(),
+                    #struct_name_str,
+                    ::rt::ClassMeta {
+                        dep: vec![#(#deps),*],
+                        def: vec![&::rt::Definition {
+                            name: #struct_name_str,
+                            namespace: module_path!(),
+                            ty: ::rt::Ty::Class,
+                        }],
+                    }
+                );
+            }
+        };
 
     };
 
@@ -130,21 +130,21 @@ fn handle_impl(attr: TokenStream, item_impl: ItemImpl) -> TokenStream {
     let expanded = quote! {
         #item_impl
 
+        const _: () = {
+            // use ::rt::deps::ctor::ctor;
 
-
-
-
-        #[::rt::deps::ctor::ctor]
-        pub fn #ctor_fn_name() {
-            ::rt::submit_class_meta(
-                module_path!(),
-                #struct_name_str,
-                ::rt::ClassMeta {
-                    dep: vec![#(#deps),*],
-                    def: #def,
-                }
-            );
-        }
+            #[::rt::deps::ctor::ctor]
+            fn #ctor_fn_name() {
+                ::rt::submit_class_meta(
+                    module_path!(),
+                    #struct_name_str,
+                    ::rt::ClassMeta {
+                        dep: vec![#(#deps),*],
+                        def: #def,
+                    }
+                );
+            }
+        };
 
 
     };

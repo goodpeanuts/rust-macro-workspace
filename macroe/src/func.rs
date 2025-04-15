@@ -21,19 +21,21 @@ pub fn func_wrapper(attr: TokenStream, item: TokenStream) -> TokenStream {
         #input
 
 
-        #[::rt::deps::ctor::ctor]
-        fn #ctor_fn_name() {
-            let func_ptr = #func_name as usize;
-            ::rt::FUNC_META_MAP.insert(func_ptr, &::rt::Meta {
-                dep: &[#(#deps),*],
-                def: &[&::rt::Definition {
-                    name: #func_name_str,
-                    namespace: module_path!(),
+        const _: () =  {
+            #[::rt::deps::ctor::ctor]
+            fn #ctor_fn_name() {
+                let func_ptr = #func_name as usize;
+                ::rt::FUNC_META_MAP.insert(func_ptr, &::rt::Meta {
+                    dep: &[#(#deps),*],
+                    def: &[&::rt::Definition {
+                        name: #func_name_str,
+                        namespace: module_path!(),
+                        ty: ::rt::Ty::Func,
+                    }],
                     ty: ::rt::Ty::Func,
-                }],
-                ty: ::rt::Ty::Func,
-            });
-        }
+                });
+            }
+        };
 
 
         // #[used]

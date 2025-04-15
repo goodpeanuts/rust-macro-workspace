@@ -11,8 +11,8 @@ required-features = ["bindgen"]
 [dependencies]
 
 [build-dependencies]
-rt = { path = "../rt"}
-playground = { path = "../playground", features = ["bindgen"]}
+rt = { path = "../rt" }
+playground = { path = "../playground", features = ["bindgen"] }
 
 [features]
 defult = ["bindgen"]

@@ -1,12 +1,12 @@
 [workspace]
-members = [ "rt","macroe", "playground", "ffi", "playground_dep"]
+members = ["rt", "macroe", "playground", "ffi", "playground_dep"]
 resolver = "2"
 
 [workspace.dependencies]
 syn = { version = "2", features = ["full", "extra-traits"] }
 quote = { version = "1.0" }
 proc-macro2 = "1.0.43"
-ctor = { version = "0.4.1"}
+ctor = { version = "0.2.8" }
 uuid = { version = "1.16.0", features = ["v4"] }
 
 [profile.dev]

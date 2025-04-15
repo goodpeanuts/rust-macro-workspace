@@ -4,9 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-macroe ={ path = "../macroe"}
-rt = { path = "../rt"}
-ctor = { workspace = true }
+macroe = { path = "../macroe" }
+rt = { path = "../rt" }
 
 [features]
 bindgen = ["macroe/bindgen"]
