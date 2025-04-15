@@ -1,41 +1,56 @@
-# Rust Macro Workspace
+# Macro for distributed meta collection
 
-This repository serves as a scaffold for quickly writing and testing Rust macros. It provides a structured workspace with the following components:
+## Description
 
-- **knowledge_ai**: A mock dependency used for testing and demonstrating macro functionality.
-- **macroe**: A library containing procedural macros for Rust.
-- **playground**: A sample application to validate and experiment with the macros.
+This repository contains a workspace for developing and testing Rust macros. It includes a sample macro implementation and a playground project to test and validate the macro's behavior.
+The workspace is structured to facilitate rapid development and testing of macros, with a focus on ease of use and flexibility.
 
-## Features
+- The `macroe` crate contains the macro implementation, while the `playground` crate serves as a definition ground for the macro. The `playground` crate includes mock dependencies to simulate real-world usage of the macro.
+- The `playground` crate is designed to be a simple and effective way to test the macro's behavior without needing to set up a complex project structure. It includes a basic example of how to use the macro, as well as a test suite to validate its functionality.
+- The `rt` crate is a runtime crate that provides the necessary runtime support for the macro when program . 
+- The `ffi` crate is a library that provides an entry point for generating and managing FFI-related metadata. It collects all metadata (Meta) and writes it to the `src/spec` file. The `ffi` crate is designed to be a simple and effective way to manage FFI-related metadata without needing to set up a complex project structure.
 
-- Pre-configured workspace for Rust macro development.
-- Example procedural macro implementation.
-- Mock dependencies for testing macro behavior.
-- Easy-to-use playground for rapid iteration and debugging.
 
-## Usage
+## Structure
 
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd rust-macro-workspace
-   ```
-
-2. Build the workspace:
-   ```bash
-   cargo build
-   ```
-
-3. Test the macros in the `playground` project:
-   ```bash
-   cargo run playground
-   ```
-
-4. Modify the `macroe` crate to add or update macros, and use the `playground` project and command `cargo expand` in `playground` to validate them.
-
-```bash
-cargo expand
 ```
+ffi                  # Provides an entry point for generating and managing FFI-related metadata.
+├── build.rs         # Collects all metadata (Meta) and writes it to the src/spec file.
+└── src
+    ├── lib.rs
+    ├── main.rs
+    └── spec         # Stores the generated metadata.
+
+macroe               # Provides a set of custom derive macros for generating metadata (Meta) and definitions (Definition).
+└── src
+    ├── callback.rs  # Defines the #[macroe::callback] macro for generating metadata for callback interfaces.
+    ├── class.rs     # Defines the #[macroe::class] macro for generating class-related metadata for structs and impl blocks.
+    ├── enum.rs      # Defines the #[macroe::enum] macro for generating metadata for enums.
+    ├── func.rs      # Defines the #[macroe::func] macro for generating metadata for functions.
+    ├── lib.rs       # Entry point for the macro library.
+    └── model.rs     # Defines the #[macroe::model] macro for generating metadata for structs.
+
+playground            # Defines enums, structs, classes, and functions that use macros from macroe to generate metadata.
+└── src
+    ├── lib.rs       # Entry point for testing macros.
+    ├── mod1.rs
+    ├── mod2.rs      
+    └── mod3.rs
+
+playground_dep        # Provides dependencies for the playground crate to test cross-crate macro capabilities.
+├── Cargo.toml
+└── src
+    └── lib.rs
+
+rt                    # Provides the core structures and methods for metadata (Meta) and definitions (Definition).
+└── src
+    ├── class.rs
+    ├── func.rs
+    ├── lib.rs
+    └── meta.rs
+```
+
+
 
 ## License
 
