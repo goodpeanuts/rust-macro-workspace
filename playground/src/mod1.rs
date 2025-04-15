@@ -13,18 +13,19 @@ pub struct AModel {
     pub dep_model: BModel,
 }
 
-#[macroe::class("crate::mod2::BClass")]
+#[macroe::class]
 pub struct AClass {
     pub a: i32,
     pub b: i32,
-    // pub c: ,
-    pub dep_class: crate::mod2::BClass,
 }
 
-#[macroe::class]
+#[macroe::class("crate::mod2::BClass")]
 impl AClass {
     pub fn mul(&self) -> i32 {
         self.a * self.b
+    }
+    pub fn newb(&self) -> crate::mod2::BClass {
+        crate::mod2::BClass::new(self.a, self.b)
     }
 }
 

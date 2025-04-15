@@ -71,7 +71,6 @@ fn handle_struct(attr: TokenStream, item_struct: ItemStruct) -> TokenStream {
                 }
             }
 
-            // use ::rt::deps::ctor::ctor;
             #[::rt::deps::ctor::ctor]
             fn #ctor_fn_name() {
                 ::rt::submit_class_meta(
