@@ -148,8 +148,17 @@ version = "0.1.0"
 dependencies = [
  "ctor",
  "macroe",
+ "playground_dep",
  "rt",
- "uuid",
+]
+
+[[package]]
+name = "playground_dep"
+version = "0.1.0"
+dependencies = [
+ "ctor",
+ "macroe",
+ "rt",
 ]
 
 [[package]]

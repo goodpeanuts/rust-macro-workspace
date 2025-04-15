@@ -45,7 +45,7 @@ fn handle_struct(attr: TokenStream, item_struct: ItemStruct) -> TokenStream {
         .deps
         .iter()
         .map(|lit| {
-            let s = format_ident!("{}", lit.value());
+            let s: syn::Path = syn::parse_str(&lit.value()).expect("Invalid path");
             quote! { <#s as ::rt::FfiDef>::meta }
         })
         .collect::<Vec<_>>();
@@ -99,7 +99,7 @@ fn handle_impl(attr: TokenStream, item_impl: ItemImpl) -> TokenStream {
 
     // TODO 区分callback: <dyn #s::meta as FfiDef>::meta()
     let deps = deps_attr.deps.iter().map(|lit| {
-        let s = format_ident!("{}", lit.value());
+        let s: syn::Path = syn::parse_str(&lit.value()).expect("Invalid path");
         quote! { <#s as ::rt::FfiDef>::meta }
     });
 

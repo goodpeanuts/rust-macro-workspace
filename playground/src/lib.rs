@@ -1,13 +1,13 @@
-#![feature(used_with_arg)]
-#![feature(const_mut_refs)]
 pub use mod1::AClass;
 
 pub mod mod1;
+pub mod mod2;
+pub mod mod3;
 
 #[macroe::class]
 impl AClass {
-    pub fn new(a: i32, b: i32) -> Self {
-        AClass { a, b }
+    pub fn new(a: i32, b: i32, dep_class: crate::mod2::BClass) -> Self {
+        AClass { a, b, dep_class }
     }
 
     pub fn add(&self) -> i32 {
@@ -17,23 +17,6 @@ impl AClass {
     pub fn sub(&self) -> i32 {
         self.a - self.b
     }
-}
-
-#[macroe::callback]
-pub trait ACallback {
-    fn compute(&self, a: i32, b: i32) -> i32;
-}
-
-#[macroe::r#enum]
-pub enum AEnum {
-    A,
-    B,
-}
-
-#[macroe::model("AEnum")]
-pub struct AModel {
-    pub a: i32,
-    pub b: i32,
 }
 
 #[macroe::func]

@@ -11,4 +11,4 @@ proc-macro = true
 syn ={ workspace = true}
 quote = { workspace = true}
 proc-macro2 = { workspace = true}
-uuid = { version = "1.16.0", features = ["v4"] }
+uuid = { workspace = true}

@@ -7,10 +7,6 @@ description = "A playground for macro use to test macro in macroe"
 [dependencies]
 macroe ={ path = "../macroe"}
 rt = { path = "../rt"}
-uuid = "1.16.0"
-ctor = { version = "0.4.1", features = ["used_linker"] }
-
-[build-dependencies]
-macroe = { path = "../macroe" }
-rt = { path = "../rt"}
+ctor = { workspace = true }
+playground_dep = { path = "../playground_dep" }
 

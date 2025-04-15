@@ -1,0 +1,9 @@
+[package]
+name = "playground_dep"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+macroe ={ path = "../macroe"}
+rt = { path = "../rt"}
+ctor = { workspace = true }

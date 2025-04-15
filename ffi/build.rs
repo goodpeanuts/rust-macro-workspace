@@ -15,16 +15,12 @@ macro_rules! collect_metas {
 fn main() {
     println!("cargo:rerun-if-changed=build.rs");
     let metas: Vec<&'static Meta> = collect_metas!(
-        // enum
-        playground::AEnum::meta(),
-        // model
-        playground::AModel::meta(),
-        // callback
-        <dyn playground::ACallback>::meta(),
-        // fn
+        playground::mod1::AEnum::meta(),
+        playground::mod1::AModel::meta(),
+        <dyn playground::mod1::ACallback>::meta(),
         get_func_meta(playground::test_fn as usize),
         get_func_meta(playground::mod1::mod1_fn as usize),
-        // class
+        playground::mod3::_ExportModel::meta(),
         playground::AClass::meta()
     );
 
@@ -53,7 +49,6 @@ fn main() {
     // writeln!(file, "{}", rt::get_class_meta_map()).expect("Failed to write to spec file");
 }
 
-/// 深度优先地收集所有依赖的 Meta，结果去重，按拓扑顺序输出
 pub fn collect_all_meta(metas: Vec<&'static Meta>) -> Vec<&'static Meta> {
     let mut result = Vec::new();
     let mut visited = HashSet::new();
@@ -69,13 +64,11 @@ pub fn collect_all_meta(metas: Vec<&'static Meta>) -> Vec<&'static Meta> {
         }
         visited.insert(ptr);
 
-        // 先递归处理依赖
         for dep_fn in meta.dep {
             let dep_meta = dep_fn();
             dfs(dep_meta, visited, result);
         }
 
-        // 然后把当前 meta 加入结果
         result.push(meta);
     }
 
