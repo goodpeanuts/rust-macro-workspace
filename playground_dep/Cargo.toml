@@ -7,3 +7,6 @@ edition = "2021"
 macroe ={ path = "../macroe"}
 rt = { path = "../rt"}
 ctor = { workspace = true }
+
+[features]
+bindgen = ["macroe/bindgen"]

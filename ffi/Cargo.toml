@@ -3,8 +3,17 @@ name = "ffi"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "ffi"
+path = "src/main.rs"
+required-features = ["bindgen"]
+
 [dependencies]
 
 [build-dependencies]
 rt = { path = "../rt"}
-playground = { path = "../playground" }
+playground = { path = "../playground", features = ["bindgen"]}
+
+[features]
+defult = ["bindgen"]
+bindgen = ["playground/bindgen"]

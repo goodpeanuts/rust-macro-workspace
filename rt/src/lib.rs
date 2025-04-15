@@ -1,3 +1,7 @@
+pub mod deps {
+    pub use ctor;
+}
+
 mod class;
 mod func;
 mod meta;

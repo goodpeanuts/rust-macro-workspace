@@ -16,6 +16,8 @@ pub fn enum_wrapper(attr: TokenStream, item: TokenStream) -> TokenStream {
 
     let expanded = quote! {
         #input
+
+
         impl ::rt::FfiDef for #trait_name {
             const META: &'static ::rt::Meta = &::rt::Meta {
                 dep: &[#(#deps),*],

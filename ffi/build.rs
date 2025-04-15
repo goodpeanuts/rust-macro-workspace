@@ -1,5 +1,4 @@
 use rt::{get_func_meta, FfiDef, Meta};
-use std::collections::HashSet;
 use std::fs::{self, OpenOptions};
 use std::io::Write;
 use std::path::Path;
@@ -24,7 +23,7 @@ fn main() {
         playground::AClass::meta()
     );
 
-    let defs = collect_all_meta(metas);
+    let defs = rt::collect_all_meta(metas);
 
     let out_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap();
     let ffi_file_path = Path::new(&out_dir).join("src/spec");
@@ -47,35 +46,4 @@ fn main() {
     // writeln!(file, "{}", rt::get_func_meta_map()).expect("Failed to write to spec file");
 
     // writeln!(file, "{}", rt::get_class_meta_map()).expect("Failed to write to spec file");
-}
-
-pub fn collect_all_meta(metas: Vec<&'static Meta>) -> Vec<&'static Meta> {
-    let mut result = Vec::new();
-    let mut visited = HashSet::new();
-
-    fn dfs(
-        meta: &'static Meta,
-        visited: &mut HashSet<*const Meta>,
-        result: &mut Vec<&'static Meta>,
-    ) {
-        let ptr = meta as *const Meta;
-        if visited.contains(&ptr) {
-            return;
-        }
-        visited.insert(ptr);
-
-        for dep_fn in meta.dep {
-            let dep_meta = dep_fn();
-            dfs(dep_meta, visited, result);
-        }
-
-        result.push(meta);
-    }
-
-    for meta in metas {
-        dfs(meta, &mut visited, &mut result);
-    }
-
-    result.sort();
-    result
 }

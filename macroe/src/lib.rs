@@ -1,20 +1,27 @@
 use proc_macro::TokenStream;
+#[cfg(feature = "bindgen")]
 use syn::{
     parse::{Parse, ParseStream},
     punctuated::Punctuated,
     LitStr, Token,
 };
 
+#[cfg(feature = "bindgen")]
 mod callback;
+#[cfg(feature = "bindgen")]
 mod class;
+#[cfg(feature = "bindgen")]
 mod r#enum;
+#[cfg(feature = "bindgen")]
 mod func;
+#[cfg(feature = "bindgen")]
 mod model;
 
+#[cfg(feature = "bindgen")]
 pub(crate) struct MockDepAttr {
     pub deps: Vec<LitStr>,
 }
-
+#[cfg(feature = "bindgen")]
 impl Parse for MockDepAttr {
     fn parse(input: ParseStream) -> syn::Result<Self> {
         let punctuated = Punctuated::<LitStr, Token![,]>::parse_terminated(input)?;
@@ -25,26 +32,43 @@ impl Parse for MockDepAttr {
 }
 
 #[proc_macro_attribute]
-pub fn model(attr: TokenStream, item: TokenStream) -> TokenStream {
-    model::model_wrapper(attr, item)
+pub fn model(_attr: TokenStream, item: TokenStream) -> TokenStream {
+    #[cfg(feature = "bindgen")]
+    return model::model_wrapper(_attr, item);
+
+    #[cfg(not(feature = "bindgen"))]
+    return item;
 }
 
 #[proc_macro_attribute]
-pub fn r#enum(attr: TokenStream, item: TokenStream) -> TokenStream {
-    r#enum::enum_wrapper(attr, item)
+pub fn r#enum(_attr: TokenStream, item: TokenStream) -> TokenStream {
+    #[cfg(feature = "bindgen")]
+    return r#enum::enum_wrapper(_attr, item);
+    #[cfg(not(feature = "bindgen"))]
+    return item;
 }
 
 #[proc_macro_attribute]
-pub fn callback(attr: TokenStream, item: TokenStream) -> TokenStream {
-    callback::callback_wrapper(attr, item)
+pub fn callback(_attr: TokenStream, item: TokenStream) -> TokenStream {
+    #[cfg(feature = "bindgen")]
+    return callback::callback_wrapper(_attr, item);
+    #[cfg(not(feature = "bindgen"))]
+    return item;
 }
 
 #[proc_macro_attribute]
-pub fn func(attr: TokenStream, item: TokenStream) -> TokenStream {
-    func::func_wrapper(attr, item)
+pub fn func(_attr: TokenStream, item: TokenStream) -> TokenStream {
+    #[cfg(feature = "bindgen")]
+    return func::func_wrapper(_attr, item);
+    #[cfg(not(feature = "bindgen"))]
+    return item;
 }
 
 #[proc_macro_attribute]
-pub fn class(attr: TokenStream, item: TokenStream) -> TokenStream {
-    class::class_wrapper(attr, item)
+pub fn class(_attr: TokenStream, item: TokenStream) -> TokenStream {
+    #[cfg(feature = "bindgen")]
+    return class::class_wrapper(_attr, item);
+
+    #[cfg(not(feature = "bindgen"))]
+    return item;
 }

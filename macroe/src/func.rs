@@ -20,7 +20,8 @@ pub fn func_wrapper(attr: TokenStream, item: TokenStream) -> TokenStream {
     let expanded = quote! {
         #input
 
-        #[::ctor::ctor]
+
+        #[::rt::deps::ctor::ctor]
         fn #ctor_fn_name() {
             let func_ptr = #func_name as usize;
             ::rt::FUNC_META_MAP.insert(func_ptr, &::rt::Meta {
@@ -33,6 +34,7 @@ pub fn func_wrapper(attr: TokenStream, item: TokenStream) -> TokenStream {
                 ty: ::rt::Ty::Func,
             });
         }
+
 
         // #[used]
         // #[cfg_attr(target_os = "linux", link_section = ".data.keep")]

@@ -5,8 +5,10 @@ edition = "2021"
 description = "A playground for macro use to test macro in macroe"
 
 [dependencies]
-macroe ={ path = "../macroe"}
-rt = { path = "../rt"}
-ctor = { workspace = true }
+macroe = { path = "../macroe" }
+rt = { path = "../rt" }
 playground_dep = { path = "../playground_dep" }
+ctor = { workspace = true }
 
+[features]
+bindgen = ["macroe/bindgen"]

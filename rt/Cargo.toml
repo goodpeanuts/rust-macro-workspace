@@ -7,4 +7,4 @@ description = "mock dependency for playground"
 [dependencies]
 once_cell = "1.17.0"
 dashmap = "*"
-ctor = "*"
+ctor ={ workspace = true }

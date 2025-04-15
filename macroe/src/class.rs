@@ -53,6 +53,8 @@ fn handle_struct(attr: TokenStream, item_struct: ItemStruct) -> TokenStream {
     let expanded = quote! {
         #item_struct
 
+
+
         impl ::rt::FfiDef for #struct_name {
             const META: &'static ::rt::Meta = &::rt::Meta {
                 dep: &[#(#deps),*],
@@ -68,7 +70,10 @@ fn handle_struct(attr: TokenStream, item_struct: ItemStruct) -> TokenStream {
             }
         }
 
-        #[::ctor::ctor]
+
+
+
+        #[::rt::deps::ctor::ctor]
         pub fn #ctor_fn_name() {
             ::rt::submit_class_meta(
                 module_path!(),
@@ -125,7 +130,11 @@ fn handle_impl(attr: TokenStream, item_impl: ItemImpl) -> TokenStream {
     let expanded = quote! {
         #item_impl
 
-        #[::ctor::ctor]
+
+
+
+
+        #[::rt::deps::ctor::ctor]
         pub fn #ctor_fn_name() {
             ::rt::submit_class_meta(
                 module_path!(),
@@ -136,6 +145,8 @@ fn handle_impl(attr: TokenStream, item_impl: ItemImpl) -> TokenStream {
                 }
             );
         }
+
+
     };
 
     TokenStream::from(expanded)

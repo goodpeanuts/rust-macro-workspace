@@ -56,6 +56,38 @@ pub trait FfiDef {
     }
 }
 
+use std::collections::HashSet;
+pub fn collect_all_meta(metas: Vec<&'static Meta>) -> Vec<&'static Meta> {
+    let mut result = Vec::new();
+    let mut visited = HashSet::new();
+
+    fn dfs(
+        meta: &'static Meta,
+        visited: &mut HashSet<*const Meta>,
+        result: &mut Vec<&'static Meta>,
+    ) {
+        let ptr = meta as *const Meta;
+        if visited.contains(&ptr) {
+            return;
+        }
+        visited.insert(ptr);
+
+        for dep_fn in meta.dep {
+            let dep_meta = dep_fn();
+            dfs(dep_meta, visited, result);
+        }
+
+        result.push(meta);
+    }
+
+    for meta in metas {
+        dfs(meta, &mut visited, &mut result);
+    }
+
+    result.sort();
+    result
+}
+
 impl Ord for Definition {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         self.ty
