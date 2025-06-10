@@ -1,0 +1,15 @@
+[template]
+cargo_generate_version = ">=0.10.0"
+# 忽略模板本身的说明文件等
+ignore = [".github", "target"]
+
+
+[placeholders.playground]
+type = "string"
+prompt = "main crate name"
+default = "playground"
+
+[placeholders.macroe]
+type = "string"
+prompt = "macro crate name"
+default = "macroe"

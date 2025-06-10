@@ -1,4 +1,4 @@
-name: Rust
+name: Template CI
 
 on:
   push:
@@ -10,13 +10,24 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
-
+    
     steps:
     - uses: actions/checkout@v4
-    - name: Build
-      run: cargo build --verbose
-    - name: Run tests
-      run: cargo test --verbose
+    - uses: dtolnay/rust-toolchain@stable
+    
+    - name: Cache cargo
+      uses: actions/cache@v3
+      with:
+        path: ~/.cargo
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+    
+    - name: Install and test template
+      run: |
+        cargo install cargo-generate
+        mkdir /tmp/test && cd /tmp/test
+        cargo generate --path ${{ github.workspace }} --name test \
+          --define playground=app --define macroe=macros
+        cd test && cargo build && cargo test
+

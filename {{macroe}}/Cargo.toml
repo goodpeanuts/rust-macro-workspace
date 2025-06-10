@@ -1,5 +1,5 @@
 [package]
-name = "macroe"
+name = "{{macroe}}"
 version = "0.1.0"
 edition = "2021"
 description = "A macro library for Rust edit"

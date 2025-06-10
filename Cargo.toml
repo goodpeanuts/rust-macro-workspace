@@ -1,5 +1,5 @@
 [workspace]
-members = [ "deps","macroe", "playground"]
+members = [ "deps","{{macroe}}", "{{playground}}"]
 resolver = "2"
 
 [workspace.dependencies]
