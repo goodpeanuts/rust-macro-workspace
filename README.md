@@ -2,7 +2,7 @@
 
 This repository serves as a scaffold for quickly writing and testing Rust macros. It provides a structured workspace with the following components:
 
-- **knowledge_ai**: A mock dependency used for testing and demonstrating macro functionality.
+- **deps**: A mock dependency used for testing and demonstrating macro functionality.
 - **macroe**: A library containing procedural macros for Rust.
 - **playground**: A sample application to validate and experiment with the macros.
 

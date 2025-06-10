@@ -3,7 +3,7 @@
 version = 3
 
 [[package]]
-name = "knowledge_ai"
+name = "deps"
 version = "0.1.0"
 
 [[package]]
@@ -19,7 +19,7 @@ dependencies = [
 name = "playground"
 version = "0.1.0"
 dependencies = [
- "knowledge_ai",
+ "deps",
  "macroe",
 ]
 
