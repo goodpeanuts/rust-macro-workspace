@@ -6,4 +6,4 @@ description = "A playground for macro use to test macro in macroe"
 
 [dependencies]
 macroe ={ path = "../macroe"}
-knowledge_ai = { path = "../knowledge_ai"}
+deps = { path = "../deps"}

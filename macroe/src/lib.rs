@@ -38,7 +38,7 @@ pub fn ipc(_attr: TokenStream, item: TokenStream) -> TokenStream {
                 .register_ipc_runtime(
                     #id,
                     container.handle().app_handle().to_owned(),
-                    #setup_ipc,
+                    #setup_ipc
                 );
         }
     };
