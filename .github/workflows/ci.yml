@@ -5,6 +5,9 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
+  schedule:
+    # UTC 周一20点 = 北京时间周二4点
+    - cron: '0 20 * * 1'  
 
 env:
   CARGO_TERM_COLOR: always

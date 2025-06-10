@@ -21,6 +21,14 @@ To use this workspace, you can clone the repository and build the components. Th
 
 Clone the repository using `cargo-generate`:
 
+First, ensure you have `cargo-generate` installed. If you don't have it installed, you can do so with the following command:
+
+```bash
+cargo install cargo-generate
+```
+
+Then, generate a new project from the template:
+
 ```bash
 cargo generate --git https://github.com/goodpeanuts/rust-macro-workspace.git
 ```
