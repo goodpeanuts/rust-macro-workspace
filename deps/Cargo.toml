@@ -1,5 +1,5 @@
 [package]
-name = "knowledge_ai"
+name = "deps"
 version = "0.1.0"
 edition = "2021"
 description = "mock dependency for playground"

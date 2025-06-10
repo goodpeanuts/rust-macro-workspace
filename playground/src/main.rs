@@ -1,8 +1,8 @@
 use macroe::ipc;
 
 fn main() {
-    let container = knowledge_ai::Foo::new();
+    let container = deps::Foo::new();
 
     #[ipc]
-    use knowledge_ai::ffi::export::{ipc::setup_ipc, ID};
+    use deps::ffi::export::{ipc::setup_ipc, ID};
 }
