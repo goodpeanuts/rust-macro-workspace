@@ -15,10 +15,23 @@ This repository serves as a scaffold for quickly writing and testing Rust macros
 
 ## Usage
 
+### Use cargo-generate
+
+To use this workspace, you can clone the repository and build the components. The `{{playground}}` project is set up to demonstrate how to use the macros defined in the `{{macroe}}` crate.
+
+Clone the repository using `cargo-generate`:
+
+```bash
+cargo generate --git https://github.com/goodpeanuts/rust-macro-workspace.git
+```
+
+### Use default template
+
+if you prefer to use the default template without `cargo-generate`, you can follow these steps:
+
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
-   cd rust-macro-workspace
+   git clone -b default https://github.com/goodpeanuts/rust-macro-workspace.git
    ```
 
 2. Build the workspace:
@@ -28,7 +41,7 @@ This repository serves as a scaffold for quickly writing and testing Rust macros
 
 3. Test the macros in the `{{playground}}` project:
    ```bash
-   cargo run {{playground}}
+   cargo test
    ```
 
 4. Modify the `{{macroe}}` crate to add or update macros, and use the `{{playground}}` project and command `cargo expand` in `{{playground}}` to validate them.
