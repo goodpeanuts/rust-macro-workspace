@@ -17,8 +17,7 @@ This repository serves as a scaffold for quickly writing and testing Rust macros
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
-   cd rust-macro-workspace
+   git clone -b default https://github.com/goodpeanuts/rust-macro-workspace.git
    ```
 
 2. Build the workspace:
@@ -28,7 +27,7 @@ This repository serves as a scaffold for quickly writing and testing Rust macros
 
 3. Test the macros in the `playground` project:
    ```bash
-   cargo run playground
+   cargo test
    ```
 
 4. Modify the `macroe` crate to add or update macros, and use the `playground` project and command `cargo expand` in `playground` to validate them.
