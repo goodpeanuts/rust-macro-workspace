@@ -1,4 +1,4 @@
-use macroe::ipc;
+use {{macroe}}::ipc;
 
 fn main() {
     let container = deps::Foo::new();
